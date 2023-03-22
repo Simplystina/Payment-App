@@ -9,11 +9,14 @@ exports.register = async(req,res)=>{
 
         //get user input
         console.log(req.body, "vodyyyyyyy")
-        const {firstName, lastName, email, password}=data = req.body
+        const {firstName, lastName, email, password, phoneNumber}=data = req.body
         
         if(!(firstName && lastName && email && password)){
-            res.status(400).send("All input is required")
+           return res.status(400).send("All input is required")
         }
+         if( phoneNumber.length < 11){
+            return res.status(404).send("Incorrect phone number")
+         }
 
         //check if user already exist
         //validate if user exist in our database

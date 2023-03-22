@@ -7,7 +7,7 @@ const authRouter = express.Router()
 
 
 
-authRouter.post('/register', authController.register)
+authRouter.post('/signup', authController.register)
 authRouter.post('/login', authController.login)
 authRouter.get("/open", async(res,req)=>{
     res.send("Open links")

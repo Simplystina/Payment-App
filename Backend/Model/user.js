@@ -1,87 +1,33 @@
-const UserModel = require("../Model/user")
-const jwt = require("jsonwebtoken")
+const mongoose = require("mongoose")
+const bcrypt = require("bcryptjs")
+
+const UserModel = new mongoose.Schema({
+    firstName :{type: String, required: true},
+    lastName :{type: String, required: true},
+    phoneNumber: {type: String, required: true, unique : true},
+    email: {type: String, required:true, unique: true},
+    password: {type: String, required:true,},
+})
 
 
+UserModel.pre(
+    'save',
+    async function(next){
+        const user = this;
+        const hash = await bcrypt.hash(this.password, 10)
 
+        this.password = hash
+        next()
+    }
+)
 
-exports.register = async(req,res)=>{
-    try {
-
-        //get user input
-        console.log(req.body, "vodyyyyyyy")
-        const {firstName, lastName, email, password}=data = req.body
-        
-        if(!(firstName && lastName && email && password)){
-            res.status(400).send("All input is required")
-        }
-
-        //check if user already exist
-        //validate if user exist in our database
-
-        const oldUser = await UserModel.findOne({email})
-        if (oldUser) {
-            return res.status(409).send("User Already exist. Please Login")
-        }
-
-        //create user in our database
-
-        const user = await UserModel.create(data)
-
-
-        //return new user
-        return res.status(201).json(user)
+UserModel.methods.isValidPassword = async function(password){
+    const user = this
+    const compare = await bcrypt.compare(password, user.password)
     
-    } catch (error) {
-        console.log(error,"error")
-        
-    }
+    return compare
 }
 
-exports.login = async(req,res)=>{
-    console.log(req.body, "reeee")
-    try {
-          
-        //Get user input
-        const {email, password}=data = req.body
+const User = mongoose.model('users', UserModel)
 
-        //Validate user input
-
-        if(!(email && password)){
-            res.status(400).send("All input is required")
-        }
-
-        //Validate if user exist in our database
-        const user = await UserModel.findOne({email})
-        
-        if(!user){
-            return res.status(404).send("User doesn't exist")
-        }
-        
-        //validate user password
-        const validate = await user.isValidPassword(password)
-
-        if(!validate)
-        return res.status(404).send("Wrong password entered")
-
-        //create token
-        const token = jwt.sign(
-            { userid: user._id, email},
-            process.env.JWT_TOKEN,
-            {
-                expiresIn: "5h"
-            }
-        )
-        //save user token
-        userData = user.toObject();
-        userData.token = token 
-       
-        //console.log(token,"tokennnnnnnnnn", user, user.firstName)
-        //Delete the password from the object so as not to display the hash to the user
-        delete userData.password;
-       
-        return  res.status(200).json({message:"Logged in successfully", data:userData})
-    } catch (error) {
-        console.log(error, "error")
-    }
-
-}
+module.exports = User
