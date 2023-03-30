@@ -1,13 +1,22 @@
 const mongoose = require("mongoose")
 const bcrypt = require("bcryptjs")
 
+const Schema = mongoose.Schema
+const ObjectId = Schema.ObjectId
+
 const UserModel = new mongoose.Schema({
+
+    id: ObjectId,
     firstName :{type: String, required: true},
     lastName :{type: String, required: true},
     phoneNumber: {type: String, required: true, unique : true},
     email: {type: String, required:true, unique: true},
-    password: {type: String, required:true,},
-})
+    password: {type: String, required:true},
+  },
+  {
+    timestamps: true, toJSON: {virtuals: true}
+}
+)
 
 
 UserModel.pre(

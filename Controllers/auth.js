@@ -36,7 +36,10 @@ exports.register = async(req,res)=>{
     
     } catch (error) {
         console.log(error,"error")
-        
+        if(error.keyPattern.phoneno || error.keyPattern.phoneNumber){
+            return res.status(404).send("Phone number already registered")
+        }
+        return res.status(404).send("An error has occurred")
     }
 }
 
@@ -84,7 +87,8 @@ exports.login = async(req,res)=>{
        
         return  res.status(200).json({message:"Logged in successfully", data:userData})
     } catch (error) {
-        console.log(error, "error")
+        console.log(error.keyPattern, "error")
+        return res.status(404).send("An error occurred")
     }
 
 }

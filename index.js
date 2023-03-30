@@ -9,8 +9,9 @@ require("dotenv").config()
 
 //import Routers
 const authRouter = require("./Routers/auth")
-
-
+const clientRouter = require("./Routers/client")
+const invoiceRouter = require("./Routers/invoice")
+const paymentRouter = require("./Routers/payment")
 
 const PORT = process.env.PORT || 3334
 connect()
@@ -33,7 +34,9 @@ app.use(function(req, res, next) {
 
 
 app.use('/', authRouter)
-
+app.use('/client', auth, clientRouter)
+app.use('/invoice', auth, invoiceRouter)
+app.use('/payment', auth, paymentRouter)
 
 app.get('/',(req,res)=>{
     res.status(200).send({message:"Home Route",status:true})
