@@ -12,6 +12,7 @@ const authRouter = require("./Routers/auth")
 const clientRouter = require("./Routers/client")
 const invoiceRouter = require("./Routers/invoice")
 const paymentRouter = require("./Routers/payment")
+const { checkPaymentStatus, verifyPayment } = require("./Controllers/payments")
 
 const PORT = process.env.PORT || 3334
 connect()
@@ -37,6 +38,13 @@ app.use('/', authRouter)
 app.use('/client', auth, clientRouter)
 app.use('/invoice', auth, invoiceRouter)
 app.use('/payment', auth, paymentRouter)
+
+
+//check if payment is successful
+//checkPaymentStatus(" https://checkout.paystack.com/sdmauj9g57afb2b")
+//verifyPayment()
+verifyPayment('1679873854084-6mncms')
+
 
 app.get('/',(req,res)=>{
     res.status(200).send({message:"Home Route",status:true})

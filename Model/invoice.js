@@ -14,7 +14,8 @@ const invoiceModel = new mongoose.Schema(
         draft: {type: Boolean, default: false, enum:[true, false]},
         userId: {type: String},
         clientId:{type: String},
-        hasClientPaid:{type:Boolean, default:false, enum:[true, false]}
+        hasClientPaid:{type:Boolean, default:false, enum:[true, false]},
+        paymentreference: {type:String}
      },
 
     {
