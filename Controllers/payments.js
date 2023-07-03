@@ -103,6 +103,9 @@ exports.sendInvoicePaymentLink = async (req,res)=>{
         const invoice = await invoiceModel.find({_id: invoiceId})
         
         const client = await clientModel.find({_id:invoice[0].clientId})
+        if(invoice[0].draft){
+           return res.status(200).json({status:true, message: "Can't send email to a draft invoice, Add client to send email"})
+      }
         //console.log(invoice, "invoiceidddddddddd", client)
          const data =  await sendPaymentEmail(client[0].email, invoice[0].amount, ref, user.accountnumber, "058")
 
